@@ -4,7 +4,10 @@ import {
   createOffer,
   getAllOffers,
   getFullOffer,
+  getFavoriteOffers,
+  toggleFavorite,
 } from "../controllers/offerController.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = new Router();
 
@@ -18,5 +21,7 @@ router.post(
   ]),
   createOffer
 );
-
+router.get("/favorite", getFavoriteOffers);
+router.put("/:id/favorite", toggleFavorite);
+router.put("/:id/favorite", authenticateToken, toggleFavorite);
 export default router;

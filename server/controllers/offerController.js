@@ -127,4 +127,53 @@ async function getFullOffer(req, res, next) {
   }
 }
 
-export { getAllOffers, createOffer, getFullOffer };
+async function getFavoriteOffers(req, res, next) {
+  try {
+    const offers = await Offer.findAll({
+      where: { isFavorite: true },
+    });
+
+    const adaptedOffers = offers.map(adaptFullOfferToClient);
+    return res.json(adaptedOffers);
+  } catch (err) {
+    console.error(err);
+    return next(
+      ApiError.internal("Ошибка при получении избранных предложений")
+    );
+  }
+}
+
+async function toggleFavorite(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const offer = await Offer.findByPk(id);
+    if (!offer) {
+      return next(ApiError.badRequest("Предложение не найдено"));
+    }
+
+    offer.isFavorite = !offer.isFavorite;
+    await offer.save();
+
+    const updatedOffer = await Offer.findByPk(id, {
+      include: { model: User, as: "author" },
+    });
+
+    const adaptedOffer = adaptFullOfferToClient(
+      updatedOffer,
+      updatedOffer.author
+    );
+    return res.json(adaptedOffer);
+  } catch (error) {
+    console.error(error);
+    return next(ApiError.internal("Ошибка при изменении статуса избранного"));
+  }
+}
+
+export {
+  getAllOffers,
+  createOffer,
+  getFullOffer,
+  getFavoriteOffers,
+  toggleFavorite,
+};
