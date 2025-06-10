@@ -1,21 +1,41 @@
-import { useParams } from "react-router-dom";
-import { FullOffer } from "../../types/offer";
-import { Logo } from "../../components/logo/logo";
-import NotFoundPage from "../not-found-page/not-found-page";
-import { CommentForm } from "../../components/comment-form/comment-form";
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { FullOffer, OffersList } from '../../types/offer';
+import { Logo } from '../../components/logo/logo';
+import NotFoundPage from '../not-found-page/not-found-page';
+import { CommentForm } from '../../components/comment-form/comment-form';
+import { ReviewsList } from '../../components/reviews-list/reviews-list';
+import Map from '../../components/map/map';
+import { NearbyOffersList } from '../../components/nearby-offers/nearby-offers';
 
-type OfferProps = {
+import { reviews } from '../../mocks/reviews';
+
+type OfferPageProps = {
   offers: FullOffer[];
 };
 
-export function OfferPage({ offers }: OfferProps): JSX.Element {
-  const params = useParams<{ id: string }>();
-  const offerId = params.id ?? "";
-  const offer = offers.find((item) => item.id === offerId);
+export function OfferPage({ offers }: OfferPageProps): JSX.Element {
+  const { id } = useParams<{ id: string }>();
+  const offer = offers.find((item) => item.id === id);
 
   if (!offer) {
     return <NotFoundPage />;
   }
+
+  const nearbyOffers: OffersList[] = offers
+    .filter((item) => item.city.name === offer.city.name && item.id !== offer.id)
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      type: item.type,
+      price: item.price,
+      previewImage: item.images[0] ?? '',
+      city: item.city,
+      location: item.location,
+      isFavorite: item.isFavorite,
+      isPremium: item.isPremium,
+      rating: item.rating,
+    }));
 
   const ratingPercent = `${(Math.round(offer.rating) / 5) * 100}%`;
   const capitalizedType =
@@ -45,6 +65,7 @@ export function OfferPage({ offers }: OfferProps): JSX.Element {
             </div>
           </div>
 
+          {/* Детали предложения */}
           <div className="offer__container container">
             <div className="offer__wrapper">
               {offer.isPremium && (
@@ -78,11 +99,11 @@ export function OfferPage({ offers }: OfferProps): JSX.Element {
                   {capitalizedType}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
-                  {offer.bedrooms} Bedroom{offer.bedrooms > 1 ? "s" : ""}
+                  {offer.bedrooms} Bedroom{offer.bedrooms > 1 ? 's' : ''}
                 </li>
                 <li className="offer__feature offer__feature--adults">
                   Max&nbsp;{offer.maxAdults} adult
-                  {offer.maxAdults > 1 ? "s" : ""}
+                  {offer.maxAdults > 1 ? 's' : ''}
                 </li>
               </ul>
 
@@ -107,7 +128,7 @@ export function OfferPage({ offers }: OfferProps): JSX.Element {
                 <div className="offer__host-user user">
                   <div
                     className={`offer__avatar-wrapper user__avatar-wrapper ${
-                      offer.host.isPro ? "offer__avatar-wrapper--pro" : ""
+                      offer.host.isPro ? 'offer__avatar-wrapper--pro' : ''
                     }`}
                   >
                     <img
@@ -124,7 +145,7 @@ export function OfferPage({ offers }: OfferProps): JSX.Element {
                   )}
                 </div>
                 <div className="offer__description">
-                  {offer.description.split("\n").map((p) => (
+                  {offer.description.split('\n').map((p) => (
                     <p className="offer__text" key={p}>
                       {p}
                     </p>
@@ -132,18 +153,19 @@ export function OfferPage({ offers }: OfferProps): JSX.Element {
                 </div>
               </div>
 
-              <section className="offer__reviews reviews">
-                <h2 className="reviews__title">
-                  Reviews&nbsp;&middot;&nbsp;
-                  <span className="reviews__amount">0</span>
-                </h2>
-                <CommentForm />
-              </section>
+              <ReviewsList reviews={reviews} />
+              <CommentForm />
             </div>
           </div>
         </section>
 
-        <section className="offer__map map"></section>
+        <section className="offer__map map">
+          <Map city={offer.city} offers={nearbyOffers} />
+        </section>
+
+        <div className="container">
+          <NearbyOffersList offers={nearbyOffers} />
+        </div>
       </main>
     </div>
   );

@@ -216,6 +216,70 @@ const offers: FullOffer[] = [
     bedrooms: 1,
     maxAdults: 2,
   },
+  {
+    id: "paris-2",
+    title: "Small apartment in Paris",
+    type: "apartment",
+    price: 120,
+    city: {
+      name: "Paris",
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.86000,
+      longitude: 2.35000,
+      zoom: 16,
+    },
+    isFavorite: false,
+    isPremium: false,
+    rating: 4.1,
+    description: "Уютная квартира в Париже",
+    bedrooms: 1,
+    goods: ["Wi-Fi", "Кухня"],
+    host: {
+      isPro: false,
+      name: "Paul",
+      avatarUrl: "/img/avatar-angelina.jpg",
+    },
+    images: ["/img/wood-stone-1.jpg"],
+    maxAdults: 2,
+  },
+  {
+    id: "paris-3",
+    title: "Lovely studio near Eiffel Tower",
+    type: "apartment",
+    price: 150,
+    city: {
+      name: "Paris",
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.85837,
+      longitude: 2.294481,
+      zoom: 16,
+    },
+    isFavorite: true,
+    isPremium: true,
+    rating: 4.8,
+    description: "Студия с видом на Эйфелеву башню",
+    bedrooms: 1,
+    goods: ["Wi-Fi", "Кондиционер"],
+    host: {
+      isPro: true,
+      name: "Marie",
+      avatarUrl: "/img/avatar-angelina.jpg",
+    },
+    images: ["/img/wood-stone-1.jpg"],
+    maxAdults: 2,
+  }
 ];
 
 export { offers };
