@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
-import { OffersList } from "../../types/offer";
-import { CitiesCardList } from "../../components/cities-card-list/cities-card-list";
-import { Logo } from "../../components/logo/logo";
-import Map from "../../components/map/map"; 
-import { CityOffer } from '../../types/offer'; 
+import { useAppSelector } from '../../hooks';
+import { CityOffer, OffersList } from '../../types/offer';
+import { getOffersListByCity, sortOffersByType } from '../../utils';
+import { Logo } from '../../components/logo/logo';
+import { CitiesList } from '../../components/cities-list/cities-list';
+import { CitiesCardList } from '../../components/cities-card-list/cities-card-list';
+import Map from '../../components/map/map';
+import SortOptions from '../../components/sort-options/sort-options';
+import { SortOffer } from '../../types/sort';
 
-type MainPageProps = {
-  rentalOffersCount: number;
-  offersList: OffersList[];
-};
+export function MainPage(): JSX.Element {
+  const selectedCity = useAppSelector((state) => state.city)!;
+  const allOffers = useAppSelector((state) => state.offers);
 
-export function MainPage({
-  rentalOffersCount,
-  offersList,
-}: MainPageProps): JSX.Element {
+  const selectedCityOffers = getOffersListByCity(selectedCity.name, allOffers);
+  const rentalOffersCount = selectedCityOffers.length;
+
+  const [activeSort, setActiveSort] = useState<SortOffer>('Popular');
+  const sortedOffers = sortOffersByType(selectedCityOffers, activeSort);
+
   const [selectedOffer, setSelectedOffer] = useState<OffersList | undefined>(undefined);
-
-  const currentCity: CityOffer = offersList[0].city;
+  const handleCardHover = (offer: OffersList) => setSelectedOffer(offer);
+  const handleCardLeave = () => setSelectedOffer(undefined);
 
   return (
     <div className="page page--gray page--main">
@@ -26,7 +31,6 @@ export function MainPage({
             <div className="header__left">
               <Logo />
             </div>
-
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
@@ -52,15 +56,7 @@ export function MainPage({
 
         <div className="tabs">
           <section className="locations container">
-            <ul className="locations__list tabs__list">
-              {['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'].map((city) => (
-                <li className="locations__item" key={city}>
-                  <a className={`locations__item-link tabs__item${city === 'Amsterdam' ? ' tabs__item--active' : ''}`} href="#">
-                    <span>{city}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <CitiesList selectedCity={selectedCity} />
           </section>
         </div>
 
@@ -68,40 +64,26 @@ export function MainPage({
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-
+              
               <b className="places__found">
-                {rentalOffersCount} places to stay in {offersList[0]?.city.name}
+                {rentalOffersCount} place{rentalOffersCount !== 1 && 's'} to stay in {selectedCity.name}
               </b>
-
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use href="#icon-arrow-select"></use>
-                  </svg>
-                </span>
-
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                  <li className="places__option" tabIndex={0}>Price: low to high</li>
-                  <li className="places__option" tabIndex={0}>Price: high to low</li>
-                  <li className="places__option" tabIndex={0}>Top rated first</li>
-                </ul>
-              </form>
-
+              <SortOptions
+                activeSorting={activeSort}
+                onChange={(newSorting) => setActiveSort(newSorting)}
+              />
               <CitiesCardList
-                offersList={offersList}
-                onCardHover={(offer) => setSelectedOffer(offer)} 
-                onCardLeave={() => setSelectedOffer(undefined)} 
+                offersList={sortedOffers}
+                onCardHover={handleCardHover}
+                onCardLeave={handleCardLeave}
               />
             </section>
 
             <div className="cities__right-section">
               <section className="cities__map map">
                 <Map
-                  city={currentCity}
-                  offers={offersList}
+                  city={selectedCity}
+                  offers={sortedOffers}
                   selectedOffer={selectedOffer}
                 />
               </section>

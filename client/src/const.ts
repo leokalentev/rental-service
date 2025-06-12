@@ -51,3 +51,10 @@ export const CITIES_LOCATION : CityOffer[] = [
     }
   }
 ]
+
+export const SortOffersType = {
+  Popular: 'Popular',
+  PriceToHigh: 'Price: low to high',
+  PriceToLow: 'Price: high to low',
+  TopRated: 'Top rated first',
+};
