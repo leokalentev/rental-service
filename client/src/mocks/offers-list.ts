@@ -117,4 +117,27 @@ export const offersList: OffersList[] = [
     isFavorite: false,
     rating: 4.0,
   },
+  {
+    id: "dcd5a4fc-7d3f-42b4-91d7-125b7b84e102",
+    title: "Stylish apartment in Düsseldorf center",
+    type: "apartment",
+    price: 220,
+    previewImage: "/img/apartment-dusseldorf-1.jpg",
+    city: {
+      name: "Dusseldorf",
+      location: {
+        latitude: 51.2277,
+        longitude: 6.7735,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 51.2290,
+      longitude: 6.7760,
+      zoom: 16,
+    },
+    isPremium: true,
+    isFavorite: false,
+    rating: 4.5,
+  }  
 ];

@@ -1,46 +1,32 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { FullOffer, OffersList } from "../../types/offer";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { FullOffer } from '../../types/offer';
 
-import { AppRoute, AuthorizationStatus } from "../../const";
+import { AppRoute, AuthorizationStatus } from '../../const';
 
-import { MainPage } from "../../pages/main-page/main-page";
-import { LoginPage } from "../../pages/login-page/login-page";
-import { Favorites } from "../../pages/favorites-pages/favorites-page";
-import { OfferPage } from "../../pages/offer-page/offer-page";
-import NotFoundPage from "../../pages/not-found-page/not-found-page";
+import { MainPage } from '../../pages/main-page/main-page';
+import { LoginPage } from '../../pages/login-page/login-page';
+import { Favorites } from '../../pages/favorites-pages/favorites-page';
+import { OfferPage } from '../../pages/offer-page/offer-page';
+import NotFoundPage from '../../pages/not-found-page/not-found-page';
 
-import { PrivateRoute } from "../private-route/private-route";
+import { PrivateRoute } from '../private-route/private-route';
 
-type AppMainPageProps = {
-  rentalOffersCount: number;
-  offersList: OffersList[];
+type AppProps = {
   offers: FullOffer[];
 };
 
-function App({
-  rentalOffersCount,
-  offersList,
-  offers,
-}: AppMainPageProps): JSX.Element {
+function App({ offers }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path={AppRoute.Main}
-          element={
-            <MainPage
-              rentalOffersCount={rentalOffersCount}
-              offersList={offersList}
-            />
-          }
-        />
+        <Route path={AppRoute.Main} element={<MainPage />} />
 
         <Route path={AppRoute.Login} element={<LoginPage />} />
 
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
+            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
               <Favorites />
             </PrivateRoute>
           }

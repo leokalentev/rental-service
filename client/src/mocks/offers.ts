@@ -279,7 +279,44 @@ const offers: FullOffer[] = [
     },
     images: ["/img/wood-stone-1.jpg"],
     maxAdults: 2,
-  }
+  },
+  {
+    id: "dcd5a4fc-7d3f-42b4-91d7-125b7b84e102",
+    title: "Stylish apartment in Düsseldorf center",
+    description:
+      "Bright and modern apartment located in the heart of Düsseldorf, close to the Rhine and all main attractions. Fast Wi‑Fi and a fully equipped kitchen.",
+    type: "apartment",
+    price: 220,
+    images: [
+      "/img/aapartment-dusseldorf-1.jpg",
+      "/img/apartment-dusseldorf-1.jpg",
+      "/img/apartment-dusseldorf-1.jpg",
+    ],
+    city: {
+      name: "Dusseldorf",
+      location: {
+        latitude: 51.2277,
+        longitude: 6.7735,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 51.2290,
+      longitude: 6.7760,
+      zoom: 16,
+    },
+    goods: ["Wi‑Fi", "Kitchen", "Heating", "Towels", "Washing machine"],
+    host: {
+      isPro: false,
+      name: "Lena",
+      avatarUrl: "/img/avatar-angelina.jpg",
+    },
+    isPremium: true,
+    isFavorite: false,
+    rating: 4.5,
+    bedrooms: 1,
+    maxAdults: 2,
+  }  
 ];
 
 export { offers };
